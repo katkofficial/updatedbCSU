@@ -149,7 +149,14 @@
   <ItemGroup>
     <ClInclude Include="Constants.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="UsersData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UpdateDataBase.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

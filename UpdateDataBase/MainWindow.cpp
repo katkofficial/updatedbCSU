@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "UsersData.h"
+#include "resource.h"
 
 namespace windows
 {
@@ -31,7 +32,7 @@ namespace windows
 		wndClass.cbSize = sizeof(WNDCLASSEXW);
 		wndClass.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
 		wndClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-		wndClass.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
+		wndClass.hIcon = static_cast<HICON>(LoadImageW(GetModuleHandleW(nullptr), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 170, 170, LR_DEFAULTCOLOR));
 		wndClass.lpfnWndProc = MainWindowProcedure;
 		wndClass.lpszClassName = L"MainWindow";
 
