@@ -25,6 +25,7 @@ namespace windows
 		HWND sendFileButton;
 
 		HWND currentFile;
+		HWND list;
 
 	private:
 		MainWindow();
@@ -41,5 +42,7 @@ namespace windows
 		static MainWindow& get();
 
 		HWND getHWND();
+
+		HWND getList();
 	};
 }

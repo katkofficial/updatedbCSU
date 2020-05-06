@@ -25,7 +25,8 @@ namespace data
 		contractConclusionDate,
 		column100,
 		faculty,
-		status
+		status,
+		payType
 	};
 
 	//Container size must be tableColumns size

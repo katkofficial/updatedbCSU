@@ -4,7 +4,9 @@
 #include <array>
 #include <vector>
 #include <set>
+#include <unordered_map>
 #include <fstream>
+#include <CommCtrl.h>
 
 #include "UsersData.h"
 #include "resource.h"
@@ -13,6 +15,19 @@ namespace windows
 {
 	std::array<wchar_t, 256> fileNameBuffer{};
 	const std::set<char> delimiters({ {';'}, {':'} });	//Разделители
+	std::unordered_map<std::wstring, std::string> payType
+	(
+		{
+			std::make_pair(L"Обучение","0"),
+			std::make_pair(L"Пеня","1")
+		}
+	);
+
+	constexpr std::array<std::wstring_view, 2> payTypesList =
+	{
+		L"Обучение",
+		L"Пеня"
+	};
 
 	void chooseFile(HWND parent);
 
@@ -25,7 +40,7 @@ namespace windows
 		return currentDirectory;
 	}
 
-	MainWindow::MainWindow(): currentDirectory(std::filesystem::current_path())
+	MainWindow::MainWindow() : currentDirectory(std::filesystem::current_path())
 	{
 		WNDCLASSEXW wndClass = {};
 
@@ -57,19 +72,40 @@ namespace windows
 			nullptr,
 			nullptr,
 			nullptr
-			);
+		);
 
 		GetClientRect(handle, &sizes);
 
 		long clientAreaWidth = sizes.right - sizes.left;
 		long clientAreaHeight = sizes.bottom - sizes.top;
 
+		list = CreateWindowExW
+		(
+			NULL,
+			WC_COMBOBOXW,
+			L"",
+			CBS_DROPDOWNLIST | WS_CHILDWINDOW | WS_VISIBLE,
+			(clientAreaWidth - listWidth) * 0.5, standardOffsetY,
+			listWidth, listHeight,
+			handle,
+			nullptr,
+			nullptr,
+			nullptr
+		);
+
+		for (const auto& i : payTypesList)
+		{
+			SendMessageW(list, CB_ADDSTRING, NULL, reinterpret_cast<LPARAM>(i.data()));
+		}
+
+		SendMessageW(list, CB_SETCURSEL, 0, NULL);
+
 		warning = CreateWindowExW
 		(
 			NULL,
 			L"STATIC",
 			L"Внимание!\nПрограмма выполняет удаление старых данных и добавление новых!",
-			WS_CHILDWINDOW | WS_VISIBLE | SS_CENTER,	
+			WS_CHILDWINDOW | WS_VISIBLE | SS_CENTER,
 			22, 100,
 			warningWidth, warningHeight,
 			handle,
@@ -90,7 +126,7 @@ namespace windows
 			HMENU(chooseButton),
 			nullptr,
 			nullptr
-			);
+		);
 
 		sendFileButton = CreateWindowExW
 		(
@@ -104,7 +140,7 @@ namespace windows
 			HMENU(sendButton),
 			nullptr,
 			nullptr
-			);
+		);
 
 		currentFile = CreateWindowExW
 		(
@@ -118,7 +154,7 @@ namespace windows
 			nullptr,
 			nullptr,
 			nullptr
-			);
+		);
 	}
 
 	MainWindow& MainWindow::get()
@@ -132,8 +168,15 @@ namespace windows
 		return handle;
 	}
 
+	HWND MainWindow::getList()
+	{
+		return list;
+	}
+
 	MainWindow::~MainWindow()
 	{
+		DestroyWindow(list);
+		DestroyWindow(warning);
 		DestroyWindow(chooseFileButton);
 		DestroyWindow(sendFileButton);
 		DestroyWindow(currentFile);
@@ -173,9 +216,17 @@ namespace windows
 				std::vector<data::UsersData<char>> information;
 				information.reserve(res.size() / tableColumns);
 
+				std::wstring type;
+				int id = SendMessageW(ptr->getList(), CB_GETCURSEL, NULL, NULL);
+
+				type.resize(SendMessageW(ptr->getList(), CB_GETLBTEXTLEN, id, NULL));
+
+				SendMessageW(ptr->getList(), CB_GETLBTEXT, id, reinterpret_cast<LPARAM>(type.data()));
+
 				for (size_t i = 0; i < res.size(); i += tableColumns)
 				{
 					information.emplace_back(std::vector<std::string>(std::begin(res) + i, std::begin(res) + i + tableColumns));
+					information.back().get().push_back(payType[type]);
 				}
 
 				std::string command;

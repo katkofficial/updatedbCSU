@@ -10,8 +10,11 @@ constexpr long sendButtonWidth = 250;		//Ширина кнопки отправки файла
 constexpr long sendButtonHeight = 40;		//Высота кнопки отправки файла
 constexpr long currentFileWidth = 500;		//Ширина поля с названием файла
 constexpr long currentFileHeight = 20;		//Высота поля с названием файла
-constexpr long warningWidth = 500;		//Ширина поля с названием файла
-constexpr long warningHeight = 35;		//Высота поля с названием файла
+constexpr long warningWidth = 500;			//Ширина поля с названием файла
+constexpr long warningHeight = 35;			//Высота поля с названием файла
+constexpr long listWidth = 300;				//Ширина выпадающего списка
+constexpr long listHeight = 200;			//Высота выпадающего списка
+constexpr long standardOffsetY = 10;		//Обычный отступ по высоте
 
 constexpr short tableColumns = 17;
 
