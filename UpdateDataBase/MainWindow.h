@@ -9,7 +9,8 @@ namespace windows
 	enum Buttons : unsigned char
 	{
 		chooseButton = 192,
-		sendButton
+		sendButton,
+		deleteButton
 	};
 
 	class MainWindow
@@ -23,6 +24,7 @@ namespace windows
 
 		HWND chooseFileButton;
 		HWND sendFileButton;
+		HWND deleteDBButton;
 
 		HWND currentFile;
 		HWND list;

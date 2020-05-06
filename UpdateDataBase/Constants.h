@@ -19,3 +19,4 @@ constexpr long standardOffsetY = 10;		//Обычный отступ по высоте
 constexpr short tableColumns = 17;
 
 constexpr char applicationName[] = "UpdatePaymentPageDataBase.exe ";
+constexpr char deleteDataBase[] = "DeletePaymentDB.exe";

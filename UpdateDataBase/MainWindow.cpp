@@ -142,6 +142,20 @@ namespace windows
 			nullptr
 		);
 
+		deleteDBButton = CreateWindowExW
+		(
+			NULL,
+			L"BUTTON",
+			L"Очистить базу данных",
+			WS_CHILDWINDOW | WS_VISIBLE,
+			(clientAreaWidth - chooseButtonWidth) * 0.5, (clientAreaHeight - chooseButtonHeight) * 0.5 + chooseButtonHeight * 3 + standardOffsetY,
+			sendButtonWidth, sendButtonHeight,
+			handle,
+			HMENU(deleteButton),
+			nullptr,
+			nullptr
+		);
+
 		currentFile = CreateWindowExW
 		(
 			NULL,
@@ -199,6 +213,11 @@ namespace windows
 
 			case chooseButton:
 				chooseFile(ptr->getHWND());
+
+				break;
+
+			case deleteButton:
+				system(deleteDataBase);
 
 				break;
 
