@@ -33,9 +33,7 @@
 
 # VS folders
 .vs/
-Debug/
-Release/
-x64/
+bin/
 
 # Other files
 *.txt

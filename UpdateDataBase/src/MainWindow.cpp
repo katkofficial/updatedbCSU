@@ -10,7 +10,7 @@
 
 #include "DataConversion.h"
 #include "UsersData.h"
-#include "resource.h"
+#include "../res/resource.h"
 
 using namespace std;
 

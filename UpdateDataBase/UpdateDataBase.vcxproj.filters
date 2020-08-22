@@ -15,41 +15,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="src\MainWindow.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
+    <ClCompile Include="src\Main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DataConversion.cpp">
+    <ClCompile Include="src\DataConversion.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainWindow.h">
+    <ClInclude Include="src\UsersData.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="UsersData.h">
+    <ClInclude Include="src\MainWindow.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Constants.h">
+    <ClInclude Include="src\DataConversion.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="src\Constants.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DataConversion.h">
+    <ClInclude Include="res\resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="UpdateDataBase.rc">
-      <Filter>Файлы ресурсов</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon.ico">
+    <Image Include="res\icon.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\UpdateDataBase.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
