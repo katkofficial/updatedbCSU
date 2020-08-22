@@ -8,22 +8,25 @@
 #include <fstream>
 #include <CommCtrl.h>
 
+#include "DataConversion.h"
 #include "UsersData.h"
 #include "resource.h"
 
+using namespace std;
+
 namespace windows
 {
-	std::array<wchar_t, 256> fileNameBuffer{};
-	const std::set<char> delimiters({ {';'}, {':'} });	//Разделители
-	std::unordered_map<std::wstring, std::string> payType
+	array<wchar_t, 256> fileNameBuffer{};
+	const set<char> delimiters({ {';'}, {':'} });	//Разделители
+	unordered_map<wstring, string> payType
 	(
 		{
-			std::make_pair(L"Обучение","0"),
-			std::make_pair(L"Пеня","1")
+			make_pair(L"Обучение","0"),
+			make_pair(L"Пеня","1")
 		}
 	);
 
-	constexpr std::array<std::wstring_view, 2> payTypesList =
+	constexpr array<wstring_view, 2> payTypesList =
 	{
 		L"Обучение",
 		L"Пеня"
@@ -31,16 +34,16 @@ namespace windows
 
 	void chooseFile(HWND parent);
 
-	std::vector<std::string> parse();
+	vector<string> parse();
 
 	LRESULT __stdcall MainWindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	std::filesystem::path MainWindow::getCurrentDirectory() const
+	filesystem::path MainWindow::getCurrentDirectory() const
 	{
 		return currentDirectory;
 	}
 
-	MainWindow::MainWindow() : currentDirectory(std::filesystem::current_path())
+	MainWindow::MainWindow() : currentDirectory(filesystem::current_path())
 	{
 		WNDCLASSEXW wndClass = {};
 
@@ -231,11 +234,11 @@ namespace windows
 					break;
 				}
 
-				std::vector<std::string> res = parse();
-				std::vector<data::UsersData<char>> information;
+				vector<string> res = parse();
+				vector<data::UsersData<char>> information;
 				information.reserve(res.size() / tableColumns);
 
-				std::wstring type;
+				wstring type;
 				int id = SendMessageW(ptr->getList(), CB_GETCURSEL, NULL, NULL);
 
 				type.resize(SendMessageW(ptr->getList(), CB_GETLBTEXTLEN, id, NULL));
@@ -244,19 +247,19 @@ namespace windows
 
 				for (size_t i = 0; i < res.size(); i += tableColumns)
 				{
-					information.emplace_back(std::vector<std::string>(std::begin(res) + i, std::begin(res) + i + tableColumns));
+					information.emplace_back(vector<string>(begin(res) + i, begin(res) + i + tableColumns));
 					information.back().get().push_back(payType[type]);
 				}
 
-				std::string command;
+				string command;
 
 				for (const auto& i : information)
 				{
-					const std::vector<std::string>& ref = i.get();
+					const vector<string>& ref = i.get();
 
 					for (const auto& j : ref)
 					{
-						std::string tem;
+						string tem;
 
 						for (const auto& k : j)
 						{
@@ -275,21 +278,21 @@ namespace windows
 				}
 				command.pop_back();
 
-				std::filesystem::path temFile = ptr->getCurrentDirectory();
+				filesystem::path temFile = ptr->getCurrentDirectory();
 				temFile.append("tem.txt");
 
-				std::ofstream out(temFile);
-				out.write(command.data(), command.size());
+				ofstream out(temFile);
+				out << toANSI(toOEM866(command));
 				out.close();
 
 				DWORD attributes = GetFileAttributesW(temFile.generic_wstring().data());
 				SetFileAttributesW(temFile.generic_wstring().data(), attributes + FILE_ATTRIBUTE_HIDDEN);
 
-				std::string relativePath = ptr->getCurrentDirectory().generic_string();
+				string relativePath = ptr->getCurrentDirectory().generic_string();
 				relativePath += "/";
 				relativePath += applicationName;
 
-				system(std::string(relativePath + temFile.generic_string()).data());
+				system(string(relativePath + temFile.generic_string()).data());
 			}
 
 			break;
@@ -307,24 +310,25 @@ namespace windows
 		}
 	}
 
-	std::vector<std::string> parse()
+	vector<string> parse()
 	{
-		std::vector<std::string> res;
+		vector<string> res;
 
-		std::ifstream file(fileNameBuffer.data());
+		ifstream file(fileNameBuffer.data());
 		if (file.is_open())
 		{
-			while (!file.eof())
+			string garbage;
+
+			for (size_t i = 0; i < 3; i++)	//Пропускает первые 3 строки
 			{
-				std::string line;
-				std::getline(file, line);
+				getline(file, garbage);
+			}
 
-				if (line == "")
-				{
-					break;
-				}
+			string line;
 
-				std::string tem;
+			while (getline(file, line))
+			{
+				string tem;
 
 				size_t commaCount = 0;
 
@@ -365,7 +369,7 @@ namespace windows
 	{
 		OPENFILENAMEW file = {};
 
-		std::wstring temp = fileNameBuffer.data();
+		wstring temp = fileNameBuffer.data();
 
 		file.lStructSize = sizeof(OPENFILENAMEW);
 		file.hwndOwner = parent;
@@ -381,7 +385,7 @@ namespace windows
 
 		GetOpenFileNameW(&file);
 
-		std::wstring fileName = file.lpstrFile;
+		wstring fileName = file.lpstrFile;
 
 		SetWindowTextW(FindWindowExW(parent, nullptr, L"STATIC", temp.data()), fileName.data());
 	}
