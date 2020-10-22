@@ -38,6 +38,8 @@ namespace windows
 
 	LRESULT __stdcall MainWindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
+	string changeStrings(string&& str);
+
 	filesystem::path MainWindow::getCurrentDirectory() const
 	{
 		return currentDirectory;
@@ -282,7 +284,7 @@ namespace windows
 				temFile.append("tem.txt");
 
 				ofstream out(temFile);
-				out << toANSI(toOEM866(command));
+				out << changeStrings(toANSI(toOEM866(command)));
 				out.close();
 
 				DWORD attributes = GetFileAttributesW(temFile.generic_wstring().data());
@@ -388,5 +390,20 @@ namespace windows
 		wstring fileName = file.lpstrFile;
 
 		SetWindowTextW(FindWindowExW(parent, nullptr, L"STATIC", temp.data()), fileName.data());
+	}
+
+	string changeStrings(string&& str)
+	{
+		for (const auto& i : toChange)
+		{
+			size_t index = string::npos;
+
+			while ((index = str.find(i)) != string::npos)
+			{
+				str.replace(str.begin() + index, str.begin() + index + i.size(), changeTo);
+			}
+		}
+
+		return str;
 	}
 }
